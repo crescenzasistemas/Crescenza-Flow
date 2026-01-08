@@ -3,148 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crescenza Flow | Ritual de Sexta</title>
+    <title>Crescenza Flow | Sistema de Encerramento Semanal</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- IDENTIDADE VISUAL (Baseada nas suas imagens) --- */
+        /* --- DESIGN SYSTEM ROBUSTO (Crescenza) --- */
         :root {
-            --brand: #FF6600;       /* Laranja Vibrante */
-            --brand-dark: #cc5200;
-            --dark: #1E1E1E;        /* Fundo Dark das imagens */
-            --paper: #FFFFFF;
-            --text: #334155;
-            --bg-app: #F3F4F6;
+            --primary: #FF6600;
+            --primary-dark: #cc5200;
+            --secondary: #1E293B; /* Azul Noturno Profissional */
+            --bg-body: #F1F5F9;
+            --surface: #FFFFFF;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --text-main: #334155;
+            --text-light: #64748B;
         }
 
         * { box-sizing: border-box; outline: none; }
         
-        body {
-            margin: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-app);
-            color: var(--text);
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            line-height: 1.5;
             display: flex;
             justify-content: center;
+            padding: 40px 0;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        /* --- TELA DE LOGIN (Proteção) --- */
+        /* --- TELA DE LOGIN --- */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(30, 30, 30, 0.98);
-            z-index: 9999;
+            background: rgba(15, 23, 42, 0.98); z-index: 9999;
             display: flex; align-items: center; justify-content: center; flex-direction: column;
         }
-        .login-box {
-            text-align: center; color: white; max-width: 300px;
-        }
-        .login-box h1 { color: var(--brand); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        .pass-input {
-            padding: 15px; border-radius: 8px; border: none; width: 100%;
-            text-align: center; font-size: 18px; letter-spacing: 3px; margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        .btn-login {
-            background: var(--brand); color: white; padding: 12px; width: 100%;
-            border: none; border-radius: 8px; font-weight: 800; cursor: pointer;
-            text-transform: uppercase; transition: 0.3s;
-        }
-        .btn-login:hover { background: var(--brand-dark); box-shadow: 0 0 15px rgba(255, 102, 0, 0.4); }
+        .login-box { text-align: center; background: white; padding: 40px; border-radius: 12px; width: 320px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-top: 6px solid var(--primary); }
+        .login-box h1 { color: var(--secondary); margin: 0 0 10px 0; font-size: 24px; text-transform: uppercase; }
+        .pass-input { width: 100%; padding: 12px; margin: 20px 0; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+        .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-login:hover { background: var(--primary-dark); }
 
-        /* --- PAPEL A4 (A Ferramenta) --- */
+        /* --- PÁGINA A4 --- */
         .page {
             width: 210mm;
-            min-height: 297mm; /* Tamanho A4 */
-            background: var(--paper);
+            min-height: 297mm;
+            background: var(--surface);
             padding: 15mm;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            position: relative;
-            display: none; /* Escondido até logar */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            display: none; /* Oculto até logar */
             flex-direction: column;
+            position: relative;
+            overflow: hidden; /* Para a marca d'água */
+        }
+
+        /* MARCA D'ÁGUA DE FUNDO */
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            font-weight: 800;
+            color: rgba(0,0,0,0.02);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            text-transform: uppercase;
         }
 
         /* CABEÇALHO */
         header {
-            border-bottom: 4px solid var(--brand);
-            padding-bottom: 20px; margin-bottom: 30px;
-            display: flex; justify-content: space-between; align-items: flex-end;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 3px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px;
+            z-index: 1;
         }
-        .logo h1 { margin: 0; font-size: 24px; color: var(--dark); text-transform: uppercase; letter-spacing: -1px; }
-        .logo span { color: var(--brand); }
-        .meta input { 
-            border: none; border-bottom: 1px dashed #ccc; text-align: right; 
-            font-family: inherit; font-weight: 600; color: var(--brand); width: 150px;
-        }
+        .brand h1 { font-size: 28px; color: var(--secondary); margin: 0; text-transform: uppercase; letter-spacing: -0.5px; }
+        .brand span { color: var(--primary); }
+        .brand p { font-size: 11px; color: var(--text-light); margin: 2px 0 0 0; letter-spacing: 1.5px; text-transform: uppercase; }
+        
+        .meta-data { text-align: right; font-size: 12px; color: var(--text-light); }
+        .meta-input { border: none; border-bottom: 1px dashed #94a3b8; font-family: inherit; font-weight: 600; color: var(--secondary); text-align: right; width: 140px; background: transparent; }
 
-        /* CONCEITO CIENTÍFICO (Box Educativo) */
-        .science-alert {
-            background: #FFF7ED; border-left: 5px solid var(--brand);
-            padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 30px;
-            display: flex; gap: 15px; align-items: start;
+        /* CIÊNCIA E CONTEXTO */
+        .context-box {
+            background: #FFF7ED; border-left: 4px solid var(--primary);
+            padding: 15px 20px; border-radius: 0 8px 8px 0; margin-bottom: 30px;
+            display: flex; gap: 15px; align-items: flex-start; z-index: 1;
         }
-        .science-icon { font-size: 24px; color: var(--brand); }
-        .science-text h4 { margin: 0 0 5px 0; color: var(--dark); text-transform: uppercase; font-size: 14px; }
-        .science-text p { margin: 0; font-size: 13px; color: #666; font-family: 'Lora', serif; }
+        .context-icon { font-size: 20px; color: var(--primary); margin-top: 2px; }
+        .context-content h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: var(--secondary); font-weight: 800; }
+        .context-content p { margin: 4px 0 0 0; font-size: 12px; color: var(--text-main); font-family: 'Lora', serif; }
 
-        /* SEÇÕES DO RITUAL */
+        /* ESTRUTURA DE SEÇÕES */
+        .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 25px; z-index: 1; }
+        .full-row { margin-bottom: 25px; z-index: 1; }
+
         .section-header {
             display: flex; align-items: center; gap: 10px;
-            margin-bottom: 15px; margin-top: 30px;
+            margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
         }
-        .section-header h3 { margin: 0; font-size: 16px; text-transform: uppercase; color: var(--dark); }
-        .section-header i { color: var(--brand); }
+        .section-header i { color: var(--primary); font-size: 14px; }
+        .section-header h3 { margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--secondary); font-weight: 700; }
 
-        /* CHECKLIST */
-        .task {
-            display: flex; align-items: center; gap: 15px;
-            padding: 12px; border-bottom: 1px solid #eee;
-            transition: 0.2s; cursor: pointer;
+        /* CHECKLISTS ROBUSTOS */
+        .checklist-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 10px; border: 1px solid transparent; border-radius: 6px;
+            transition: 0.2s; cursor: pointer; margin-bottom: 4px;
         }
-        .task:hover { background: #f9f9f9; }
-        .task.checked h4 { text-decoration: line-through; color: #ccc; }
-        .task.checked .check-box { background: var(--success); border-color: var(--success); color: white; }
-        
-        .check-box {
-            width: 24px; height: 24px; border: 2px solid #ccc; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center; color: transparent;
-        }
-        .task-info h4 { margin: 0; font-size: 15px; color: var(--dark); }
-        .task-info p { margin: 2px 0 0; font-size: 12px; color: #888; }
+        .checklist-item:hover { background: #F8FAFC; border-color: var(--border); }
+        .checklist-item.checked { background: #F0FDF4; border-color: #BBF7D0; }
+        .checklist-item.checked h4 { color: #94a3b8; text-decoration: line-through; }
+        .checklist-item.checked .checkbox { background: var(--success); border-color: var(--success); color: white; }
 
-        /* ÁREAS DE ESCRITA */
-        .input-box {
-            width: 100%; border: 1px dashed #ccc; background: #FAFAFA;
-            padding: 15px; border-radius: 8px; font-family: 'Lora', serif;
-            font-size: 14px; color: var(--dark); margin-top: 10px;
+        .checkbox {
+            width: 20px; height: 20px; border: 2px solid #CBD5E1; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center; font-size: 12px; color: transparent; flex-shrink: 0; margin-top: 2px;
         }
-        .input-box:focus { background: white; outline: 2px solid var(--brand); }
+        .item-text h4 { margin: 0; font-size: 13px; color: var(--text-main); font-weight: 600; }
+        .item-text p { margin: 2px 0 0 0; font-size: 11px; color: var(--text-light); }
 
-        /* RODAPÉ */
+        /* ÁREAS DE ESCRITA (INPUTS) */
+        .input-area {
+            width: 100%; min-height: 70px; border: 1px dashed #CBD5E1;
+            background: #FAFAFA; border-radius: 6px; padding: 10px;
+            font-family: 'Lora', serif; font-size: 13px; color: var(--secondary);
+            resize: none; /* Se fosse textarea, mas é div contenteditable */
+        }
+        .input-area:focus { background: white; outline: 2px solid var(--primary); border-style: solid; }
+        .input-area:empty::before { content: attr(placeholder); color: #94a3b8; font-style: italic; }
+
+        /* RODAPÉ E FEEDBACK */
         footer {
-            margin-top: auto; text-align: center; border-top: 1px solid #eee;
-            padding-top: 20px; font-size: 12px; color: #aaa;
+            margin-top: auto; padding-top: 20px; border-top: 2px solid var(--secondary);
+            display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-light); z-index: 1;
         }
+        .footer-brand strong { color: var(--secondary); }
+        .feedback-link { color: var(--primary); text-decoration: none; font-weight: 700; transition: 0.2s; }
+        .feedback-link:hover { color: var(--primary-dark); text-decoration: underline; }
 
-        /* BOTÃO FLUTUANTE DE IMPRESSÃO */
-        .fab {
+        /* BOTÃO FLUTUANTE */
+        .fab-print {
             position: fixed; bottom: 30px; right: 30px;
-            background: var(--dark); color: white; width: 60px; height: 60px;
+            background: var(--secondary); color: white; width: 60px; height: 60px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: 0.3s;
+            font-size: 24px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: 0.3s; z-index: 100;
         }
-        .fab:hover { background: var(--brand); transform: scale(1.1); }
+        .fab-print:hover { transform: translateY(-3px); background: var(--primary); }
 
-        /* AJUSTE PARA IMPRESSÃO */
+        /* MODO IMPRESSÃO */
         @media print {
             body { background: white; padding: 0; }
-            .page { box-shadow: none; width: 100%; display: flex !important; }
-            #login-screen, .fab { display: none !important; }
-            .input-box { border: 1px solid #eee; }
+            .page { box-shadow: none; width: 100%; border: none; }
+            .fab-print, #login-screen { display: none !important; }
+            .input-area { border: 1px solid #e2e8f0; }
+            /* Ajuste de margem */
+            @page { margin: 0; }
+            body { -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -153,118 +172,182 @@
     <div id="login-screen">
         <div class="login-box">
             <h1>Crescenza</h1>
-            <p style="font-size: 14px; color: #ccc; margin-bottom: 20px;">Área Exclusiva de Gestão</p>
-            <input type="password" id="pass" class="pass-input" placeholder="SENHA" onkeyup="checkEnter(event)">
-            <button class="btn-login" onclick="login()">Acessar Ferramenta</button>
-            <p id="error" style="color: #ff4444; font-size: 12px; margin-top: 10px; display: none;">Senha incorreta</p>
+            <p style="font-size:13px; color:#94a3b8; margin-bottom:20px;">FERRAMENTA DE GESTÃO EXCLUSIVA</p>
+            <input type="password" id="password" class="pass-input" placeholder="SENHA" onkeyup="checkEnter(event)">
+            <button class="btn-login" onclick="login()">Desbloquear Acesso</button>
+            <p id="error-msg" style="color:#ef4444; font-size:12px; margin-top:15px; display:none; font-weight:700;">Senha Incorreta</p>
         </div>
     </div>
 
-    <div class="fab" onclick="window.print()" title="Salvar PDF"><i class="fas fa-print"></i></div>
+    <div class="fab-print" onclick="window.print()" title="Salvar PDF ou Imprimir"><i class="fas fa-print"></i></div>
 
     <div class="page" id="app">
         
+        <div class="watermark">@crescenzaonline</div>
+
         <header>
-            <div class="logo">
+            <div class="brand">
                 <h1>Crescenza<span>Flow</span></h1>
-                <small style="color: #666; letter-spacing: 1px;">SISTEMA DE GESTÃO DE ENERGIA</small>
+                <p>Sistema de Encerramento Semanal | Método 360°</p>
             </div>
-            <div class="meta">
-                Gestor: <input type="text" placeholder="Seu Nome"><br>
-                Data: <span id="dateDisplay"></span>
+            <div class="meta-data">
+                LÍDER: <input type="text" class="meta-input" placeholder="Seu Nome"><br>
+                DATA: <input type="text" class="meta-input" id="currentDate">
             </div>
         </header>
 
-        <div class="science-alert">
-            <div class="science-icon"><i class="fas fa-battery-half"></i></div>
-            <div class="science-text">
-                <h4>A Ciência da "Reserva Cognitiva"</h4>
-                <p>O córtex pré-frontal funciona como uma bateria. Após uma semana de decisões, sua capacidade analítica reduz drasticamente na sexta à tarde. <strong>Não force decisões. Organize processos.</strong></p>
+        <div class="context-box">
+            <div class="context-icon"><i class="fas fa-brain"></i></div>
+            <div class="context-content">
+                <h4>Gestão de Energia Cognitiva</h4>
+                <p>Estudos indicam que a produtividade de segunda-feira é definida na sexta anterior. O cérebro precisa de "fechamento cognitivo" (Cognitive Closure) para descansar. Use este ritual para tirar as pendências da mente e colocá-las no papel.</p>
             </div>
         </div>
 
-        <div class="section-header">
-            <i class="fas fa-broom"></i>
-            <h3>1. Higiene Mental (Esvaziar)</h3>
-        </div>
-        
-        <div class="task" onclick="toggle(this)">
-            <div class="check-box"><i class="fas fa-check"></i></div>
-            <div class="task-info">
-                <h4>E-mail e Mensagens Zero</h4>
-                <p>Respondi o que era urgente? O que não é, foi agendado para segunda?</p>
+        <div class="grid-row">
+            <div>
+                <div class="section-header">
+                    <i class="fas fa-history"></i>
+                    <h3>1. Retrospectiva (Análise)</h3>
+                </div>
+                
+                <div class="checklist-item" onclick="toggle(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Checagem de Metas</h4>
+                        <p>Analisei os números da semana? O que avançou?</p>
+                    </div>
+                </div>
+                
+                <div class="input-area" contenteditable="true" placeholder="O que funcionou bem esta semana? (Vitórias)"></div>
+                <div class="input-area" contenteditable="true" placeholder="O que travou/bloqueou o progresso? (Gargalos)" style="margin-top:10px;"></div>
+            </div>
+
+            <div>
+                <div class="section-header">
+                    <i class="fas fa-broom"></i>
+                    <h3>2. Higiene Operacional (Ordem)</h3>
+                </div>
+
+                <div class="checklist-item" onclick="toggle(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Zero Pendências Críticas</h4>
+                        <p>Respondi o urgente? Agendei o restante para Seg?</p>
+                    </div>
+                </div>
+
+                <div class="checklist-item" onclick="toggle(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Mesa & Abas Limpas</h4>
+                        <p>Organizei arquivos físicos e fechei o navegador?</p>
+                    </div>
+                </div>
+
+                <div class="checklist-item" onclick="toggle(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Delegação Ativa</h4>
+                        <p>Destravei minha equipe? Enviei o que devia?</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="task" onclick="toggle(this)">
-            <div class="check-box"><i class="fas fa-check"></i></div>
-            <div class="task-info">
-                <h4>Limpeza de Ambiente (Físico/Digital)</h4>
-                <p>Fechei as abas do navegador? Minha mesa está limpa para segunda?</p>
+
+        <div class="grid-row">
+            <div>
+                <div class="section-header">
+                    <i class="fas fa-users"></i>
+                    <h3>3. Pessoas (Termômetro)</h3>
+                </div>
+                <div class="checklist-item" onclick="toggle(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Reconhecimento (Dopamina)</h4>
+                        <p>Enviei um elogio ou agradecimento específico?</p>
+                    </div>
+                </div>
+                <div class="input-area" contenteditable="true" placeholder="Quem se destacou? Quem precisa de apoio na próxima semana?"></div>
+            </div>
+
+            <div>
+                <div class="section-header">
+                    <i class="fas fa-chess"></i>
+                    <h3>4. Estratégia (Segunda-feira)</h3>
+                </div>
+                <div class="checklist-item" onclick="toggle(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Regra das 3 Prioridades</h4>
+                        <p>Se eu só puder fazer 3 coisas na segunda, quais serão?</p>
+                    </div>
+                </div>
+                <div class="input-area" contenteditable="true" placeholder="1. Prioridade A&#10;2. Prioridade B&#10;3. Prioridade C"></div>
             </div>
         </div>
 
-        <div class="section-header">
-            <i class="fas fa-chess"></i>
-            <h3>2. Estratégia (Priorizar)</h3>
-        </div>
-
-        <div class="task" onclick="toggle(this)">
-            <div class="check-box"><i class="fas fa-check"></i></div>
-            <div class="task-info">
-                <h4>A "Única Coisa" de Segunda-feira</h4>
-                <p>Qual é a tarefa ÚNICA que, se realizada na segunda de manhã, fará o dia valer a pena?</p>
+        <div class="full-row" style="margin-top:auto">
+            <div class="section-header" style="border-color: var(--success);">
+                <i class="fas fa-power-off" style="color:var(--success)"></i>
+                <h3 style="color:var(--success)">5. Ritual de Desconexão (Saúde Mental)</h3>
             </div>
-        </div>
-        <div class="input-box" contenteditable="true">
-            Minha prioridade nº 1 para segunda é...
-        </div>
-
-        <div class="section-header">
-            <i class="fas fa-heart"></i>
-            <h3>3. Gestão de Pessoas (Conectar)</h3>
-        </div>
-
-        <div class="task" onclick="toggle(this)">
-            <div class="check-box"><i class="fas fa-check"></i></div>
-            <div class="task-info">
-                <h4>Reconhecimento (Dopamina)</h4>
-                <p>Quem da minha equipe mandou bem essa semana? Enviei um "obrigado"?</p>
+            <p style="font-size:12px; color:#64748B; margin-bottom:10px;">Para ser uma líder inteira (Raiz e Voo), é preciso saber parar. Comprometa-se agora:</p>
+            
+            <div style="display:flex; gap:20px;">
+                <div class="checklist-item" onclick="toggle(this)" style="flex:1;">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Notificações Off</h4>
+                        <p>Silenciei o celular corporativo?</p>
+                    </div>
+                </div>
+                <div class="checklist-item" onclick="toggle(this)" style="flex:1;">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <div class="item-text">
+                        <h4>Agenda Pessoal</h4>
+                        <p>Defini meu momento de lazer/família?</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="input-box" contenteditable="true" style="min-height: 50px;">
-            Pessoa / Motivo: 
-        </div>
-
-        <div class="section-header" style="margin-top: 30px;">
-            <i class="fas fa-lightbulb"></i>
-            <h3>Insight da Semana (O que aprendi?)</h3>
-        </div>
-        <div class="input-box" contenteditable="true" style="min-height: 80px; font-style: italic;">
-            "Escreva aqui um aprendizado para não esquecer..."
         </div>
 
         <footer>
-            <p><strong>Idionara Prass</strong> | Especialista em Gestão e Cultura</p>
-            <p>www.crescenzaonline.com | Método Entre a Raiz e o Voo</p>
+            <div class="footer-brand">
+                Desenvolvido por <strong>Idionara Prass</strong> | @crescenzaonline
+            </div>
+            <div>
+                Tem sugestões? <a href="mailto:contato@crescenzaonline.com" class="feedback-link">contato@crescenzaonline.com</a>
+            </div>
         </footer>
 
     </div>
 
     <script>
-        // SENHA DE ACESSO
-        const PASS = "CRESCENZA"; 
+        // SENHA CONFIGURADA
+        const PASS_CODE = "CRESCENZA";
 
-        // Data Automática
-        const hoje = new Date();
-        document.getElementById('dateDisplay').innerText = hoje.toLocaleDateString('pt-BR');
+        // Inicialização
+        window.onload = () => {
+            const today = new Date();
+            document.getElementById('currentDate').value = today.toLocaleDateString('pt-BR');
+        };
 
+        // Lógica de Login
         function login() {
-            const val = document.getElementById('pass').value.toUpperCase();
-            if(val === PASS) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.querySelector('.page').style.display = 'flex';
+            const input = document.getElementById('password').value.toUpperCase().trim();
+            if (input === PASS_CODE) {
+                document.getElementById('login-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app').style.display = 'flex';
+                }, 400);
             } else {
-                document.getElementById('error').style.display = 'block';
+                const err = document.getElementById('error-msg');
+                err.style.display = 'block';
+                document.getElementById('password').value = '';
+                document.querySelector('.login-box').style.animation = "shake 0.3s";
+                setTimeout(() => document.querySelector('.login-box').style.animation = "", 300);
             }
         }
 
@@ -272,10 +355,23 @@
             if(e.key === "Enter") login();
         }
 
+        // Lógica de Checklist
         function toggle(el) {
             el.classList.toggle('checked');
         }
-    </script>
 
+        // CSS Animation for Error
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                50% { transform: translateX(5px); }
+                75% { transform: translateX(-5px); }
+                100% { transform: translateX(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
