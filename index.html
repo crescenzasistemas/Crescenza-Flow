@@ -18,6 +18,7 @@
             --bg: #f1f5f9;
             --paper: #ffffff;
             --border: #e2e8f0;
+            --success: #10B981;
         }
 
         * { box-sizing: border-box; outline: none; }
@@ -62,10 +63,11 @@
             width: 210mm;
             min-height: 297mm;
             background: var(--paper);
-            padding: 20mm; /* Margens de documento oficial */
+            padding: 20mm;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: none; /* Escondido até logar */
             flex-direction: column;
+            position: relative;
         }
 
         /* CABEÇALHO */
@@ -99,7 +101,7 @@
 
         /* ÁREAS DE TEXTO EXPANSÍVEIS */
         .textarea-box {
-            width: 100%; min-height: 100px; /* Começa pequeno mas cresce */
+            width: 100%; min-height: 100px;
             border: 1px solid #cbd5e1; border-radius: 4px;
             background: #f8fafc; padding: 15px;
             font-family: 'Lora', serif; font-size: 14px; color: var(--dark);
@@ -118,7 +120,6 @@
         }
         .check-label { font-size: 13px; color: var(--dark); font-weight: 500; }
         
-        /* Estado Checado */
         .check-group.checked .check-box { background: var(--success); border-color: var(--success); }
         .check-group.checked .check-label { text-decoration: line-through; color: #94a3b8; }
 
@@ -130,14 +131,49 @@
         .highlight-box h4 { margin: 0 0 5px 0; color: var(--brand-dark); font-size: 14px; text-transform: uppercase; }
         .highlight-box p { margin: 0; font-size: 13px; color: var(--dark); }
 
-        /* RODAPÉ */
+        /* RODAPÉ DO DOCUMENTO */
         .doc-footer {
             margin-top: auto; padding-top: 30px; border-top: 1px solid var(--dark);
             text-align: center; font-size: 11px; color: var(--gray);
         }
         .doc-footer strong { color: var(--brand); }
-        .contact-line { margin-top: 5px; }
-        .contact-line a { color: var(--dark); text-decoration: none; font-weight: 600; }
+
+        /* --- ÁREA DE AÇÃO FINAL (TELA) --- */
+        .final-actions-container {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px dashed #e2e8f0;
+            text-align: center;
+        }
+        
+        .btn-big-pdf {
+            background: var(--dark); color: white; padding: 15px 30px;
+            font-size: 16px; font-weight: bold; border-radius: 50px;
+            border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
+            transition: 0.3s; margin-bottom: 30px;
+        }
+        .btn-big-pdf:hover { background: var(--brand); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+        .contact-card {
+            background: #F8FAFC; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 30px; max-width: 600px; margin: 0 auto;
+        }
+        .contact-card h4 { margin: 0 0 15px 0; color: var(--dark); font-size: 18px; }
+        .contact-card p { margin: 0 0 20px 0; font-size: 14px; color: var(--gray); }
+
+        .contact-grid {
+            display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;
+        }
+        .btn-contact {
+            text-decoration: none; padding: 12px 25px; border-radius: 8px;
+            font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;
+            transition: 0.2s; border: 1px solid transparent;
+        }
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-whatsapp:hover { background: #128C7E; }
+        
+        .btn-email { background: white; border-color: #cbd5e1; color: var(--dark); }
+        .btn-email:hover { border-color: var(--brand); color: var(--brand); }
 
         /* BOTÃO FLUTUANTE */
         .fab {
@@ -152,13 +188,12 @@
         /* MODO IMPRESSÃO */
         @media print {
             body { background: white; padding: 0; display: block; }
-            #auth-overlay, .fab { display: none !important; }
+            #auth-overlay, .fab, .final-actions-container { display: none !important; } /* Esconde botões de contato na impressão */
             .document-container { 
                 box-shadow: none; width: 100%; padding: 0; margin: 0; 
                 display: block !important; 
             }
             .textarea-box { border: 1px solid #ddd; background: transparent; }
-            /* Quebra de página inteligente */
             .section-block { page-break-inside: avoid; }
             @page { margin: 1.5cm; size: A4; }
         }
@@ -176,7 +211,7 @@
         </div>
     </div>
 
-    <div class="fab" onclick="window.print()" title="Salvar PDF / Imprimir"><i class="fas fa-file-pdf"></i></div>
+    <div class="fab" onclick="savePDF()" title="Salvar PDF / Imprimir"><i class="fas fa-file-pdf"></i></div>
 
     <div class="document-container" id="app">
         
@@ -196,24 +231,23 @@
         </header>
 
         <div class="highlight-box">
-            <h4><i class="fas fa-brain"></i> A Lógica da Gestão de Energia</h4>
-            <p>O cérebro humano não foi desenhado para manter "abas abertas" indefinidamente. Este dossiê aplica o conceito de <em>Cognitive Closure</em> (Fechamento Cognitivo). Ao externalizar pendências e planejar o futuro no papel, você reduz a ansiedade em 60% e preserva sua energia para a retomada na segunda-feira.</p>
+            <h4><i class="fas fa-brain"></i> Gestão de Energia Cognitiva</h4>
+            <p>O cérebro precisa de <em>Fechamento Cognitivo</em> para descansar. Use este dossiê para externalizar pendências e preservar sua energia para a segunda-feira.</p>
         </div>
 
         <div class="section-block">
             <div class="section-header">
                 <i class="fas fa-chart-line"></i>
-                <h3>1. Retrospectiva Estratégica (O que aconteceu?)</h3>
+                <h3>1. Retrospectiva Estratégica</h3>
             </div>
-            
             <div class="grid-2">
                 <div>
-                    <p class="helper-text">VITÓRIAS: O que funcionou? Quais metas avançaram?</p>
-                    <div class="textarea-box" contenteditable="true" placeholder="Liste aqui suas conquistas da semana..."></div>
+                    <p class="helper-text">VITÓRIAS: O que funcionou?</p>
+                    <div class="textarea-box" contenteditable="true" placeholder="Liste conquistas..."></div>
                 </div>
                 <div>
-                    <p class="helper-text">GARGALOS: O que travou? Onde perdemos tempo?</p>
-                    <div class="textarea-box" contenteditable="true" placeholder="Liste aqui os bloqueios e desafios..."></div>
+                    <p class="helper-text">GARGALOS: O que travou?</p>
+                    <div class="textarea-box" contenteditable="true" placeholder="Liste bloqueios..."></div>
                 </div>
             </div>
         </div>
@@ -221,38 +255,16 @@
         <div class="section-block">
             <div class="section-header">
                 <i class="fas fa-tasks"></i>
-                <h3>2. Higiene Operacional (Checklist de Esvaziamento)</h3>
+                <h3>2. Higiene Operacional</h3>
             </div>
-            <p class="helper-text">Marque apenas quando a tarefa estiver 100% resolvida ou agendada.</p>
-
             <div class="grid-2">
                 <div>
-                    <div class="check-group" onclick="toggle(this)">
-                        <div class="check-box"><i class="fas fa-check"></i></div>
-                        <div class="check-label">E-mail Zero (Urgentes respondidos)</div>
-                    </div>
-                    <div class="check-group" onclick="toggle(this)">
-                        <div class="check-box"><i class="fas fa-check"></i></div>
-                        <div class="check-label">Agenda da próxima semana revisada</div>
-                    </div>
-                    <div class="check-group" onclick="toggle(this)">
-                        <div class="check-box"><i class="fas fa-check"></i></div>
-                        <div class="check-label">Reuniões desnecessárias canceladas</div>
-                    </div>
+                    <div class="check-group" onclick="toggle(this)"><div class="check-box"><i class="fas fa-check"></i></div><div class="check-label">E-mail Zero (Urgentes respondidos)</div></div>
+                    <div class="check-group" onclick="toggle(this)"><div class="check-box"><i class="fas fa-check"></i></div><div class="check-label">Agenda da próxima semana revisada</div></div>
                 </div>
                 <div>
-                    <div class="check-group" onclick="toggle(this)">
-                        <div class="check-box"><i class="fas fa-check"></i></div>
-                        <div class="check-label">Ambiente físico organizado (Mesa)</div>
-                    </div>
-                    <div class="check-group" onclick="toggle(this)">
-                        <div class="check-box"><i class="fas fa-check"></i></div>
-                        <div class="check-label">Abas do navegador fechadas</div>
-                    </div>
-                    <div class="check-group" onclick="toggle(this)">
-                        <div class="check-box"><i class="fas fa-check"></i></div>
-                        <div class="check-label">Pendências financeiras aprovadas</div>
-                    </div>
+                    <div class="check-group" onclick="toggle(this)"><div class="check-box"><i class="fas fa-check"></i></div><div class="check-label">Mesa e Abas Limpas</div></div>
+                    <div class="check-group" onclick="toggle(this)"><div class="check-box"><i class="fas fa-check"></i></div><div class="check-label">Pendências financeiras aprovadas</div></div>
                 </div>
             </div>
         </div>
@@ -260,16 +272,10 @@
         <div class="section-block">
             <div class="section-header">
                 <i class="fas fa-users"></i>
-                <h3>3. Termômetro da Equipe & Cultura</h3>
+                <h3>3. Termômetro da Equipe</h3>
             </div>
-            
-            <p class="helper-text">FEEDBACK RÁPIDO: Quem se destacou? Quem precisa de atenção?</p>
-            <div class="textarea-box" contenteditable="true" placeholder="Ex: Elogiar a Maria pelo relatório X; Conversar com o João sobre o prazo Y..."></div>
-            
-            <div style="margin-top:15px;">
-                <p class="helper-text">AÇÃO DE CULTURA: Qual gesto eu fiz essa semana que reforçou nossos valores?</p>
-                <div class="textarea-box" contenteditable="true" style="min-height:60px;" placeholder="Descreva sua ação de liderança..."></div>
-            </div>
+            <p class="helper-text">FEEDBACK RÁPIDO: Quem se destacou?</p>
+            <div class="textarea-box" contenteditable="true" placeholder="Ex: Elogiar a Maria pelo relatório X..."></div>
         </div>
 
         <div class="section-block">
@@ -277,32 +283,45 @@
                 <i class="fas fa-bullseye"></i>
                 <h3>4. O "Big Three" de Segunda-feira</h3>
             </div>
-            <p class="helper-text">Defina as 3 prioridades absolutas para começar a semana no ataque.</p>
-            
-            <div class="textarea-box" contenteditable="true" style="font-weight:bold; color:var(--brand-dark);" 
-                 placeholder="1. Prioridade A&#10;2. Prioridade B&#10;3. Prioridade C"></div>
+            <div class="textarea-box" contenteditable="true" style="font-weight:bold; color:var(--brand-dark);" placeholder="1. Prioridade A&#10;2. Prioridade B&#10;3. Prioridade C"></div>
         </div>
 
         <div class="section-block">
             <div class="section-header">
                 <i class="fas fa-lightbulb"></i>
-                <h3>5. Diário de Bordo (Insights & Aprendizados)</h3>
+                <h3>5. Diário de Bordo</h3>
             </div>
-            <div class="textarea-box" contenteditable="true" style="min-height:150px; background:#fff;" 
-                 placeholder="Espaço livre para reflexões, ideias que surgiram, lições aprendidas ou anotações pessoais..."></div>
+            <div class="textarea-box" contenteditable="true" style="min-height:120px;" placeholder="Reflexões, ideias ou lições aprendidas..."></div>
         </div>
 
         <footer class="doc-footer">
             <div style="margin-bottom:10px;">
-                Produto desenvolvido pela <strong>Crescenza Consultoria</strong> | Método Entre a Raiz e o Voo<br>
+                Produto desenvolvido pela <strong>Crescenza Consultoria</strong><br>
                 <em>Proibida a reprodução ou comercialização sem autorização prévia.</em>
             </div>
-            <div class="contact-line">
-                Dúvidas ou Feedback da ferramenta? <a href="mailto:contato@crescenzaonline.com">contato@crescenzaonline.com</a>
-                <br>
-                Siga: <strong>@crescenzaonline</strong> | <strong>@idionaraprass</strong>
+            <div>
+                www.crescenzaonline.com | @crescenzaonline
             </div>
         </footer>
+
+        <div class="final-actions-container">
+            <button class="btn-big-pdf" onclick="savePDF()">
+                <i class="fas fa-download"></i> SALVAR DOSSIÊ EM PDF
+            </button>
+
+            <div class="contact-card">
+                <h4>Precisa de apoio para implantar isso na cultura da sua empresa?</h4>
+                <p>O Método Crescenza transforma ferramentas em rituais de gestão.</p>
+                <div class="contact-grid">
+                    <a href="https://wa.me/55996842002" target="_blank" class="btn-contact btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+                    </a>
+                    <a href="mailto:contato@crescenzaonline.com" class="btn-contact btn-email">
+                        <i class="fas fa-envelope"></i> Enviar E-mail
+                    </a>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -331,7 +350,6 @@
                 }, 300);
             } else {
                 error.style.display = 'block';
-                // Efeito de tremor
                 const box = document.querySelector('.login-card');
                 box.style.transform = 'translateX(10px)';
                 setTimeout(() => box.style.transform = 'translateX(-10px)', 100);
@@ -346,6 +364,19 @@
         // Lógica dos Checkboxes
         function toggle(el) {
             el.classList.toggle('checked');
+        }
+
+        // Função Inteligente de Salvar PDF
+        function savePDF() {
+            // Muda o título da página temporariamente para o nome do arquivo
+            const originalTitle = document.title;
+            const date = document.getElementById('currentDate').value.replace(/\//g, '-');
+            document.title = `Dossie_Crescenza_${date}`;
+            
+            window.print();
+            
+            // Restaura o título original
+            document.title = originalTitle;
         }
     </script>
 
