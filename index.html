@@ -3,321 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crescenza Flow | Sistema de Encerramento Semanal</title>
+    <title>Dossiê de Encerramento Semanal | Crescenza</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- DESIGN SYSTEM ROBUSTO (Crescenza) --- */
+        /* --- DESIGN SYSTEM CRESCENZA (Executivo) --- */
         :root {
-            --primary: #FF6600;
-            --primary-dark: #cc5200;
-            --secondary: #1E293B; /* Azul Noturno Profissional */
-            --bg-body: #F1F5F9;
-            --surface: #FFFFFF;
-            --border: #E2E8F0;
-            --success: #10B981;
-            --text-main: #334155;
-            --text-light: #64748B;
+            --brand: #e65100;       /* Laranja Marca */
+            --brand-dark: #bf360c;
+            --dark: #1e293b;        /* Azul Petróleo Escuro */
+            --gray: #64748b;
+            --bg: #f1f5f9;
+            --paper: #ffffff;
+            --border: #e2e8f0;
         }
 
         * { box-sizing: border-box; outline: none; }
-        
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg-body); 
-            color: var(--text-main); 
-            line-height: 1.5;
+
+        body {
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+            padding: 40px 0;
             display: flex;
             justify-content: center;
-            padding: 40px 0;
             min-height: 100vh;
         }
 
         /* --- TELA DE LOGIN --- */
-        #login-screen {
+        #auth-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.98); z-index: 9999;
-            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            background: rgba(30, 41, 59, 0.98); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
         }
-        .login-box { text-align: center; background: white; padding: 40px; border-radius: 12px; width: 320px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-top: 6px solid var(--primary); }
-        .login-box h1 { color: var(--secondary); margin: 0 0 10px 0; font-size: 24px; text-transform: uppercase; }
-        .pass-input { width: 100%; padding: 12px; margin: 20px 0; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
-        .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
-        .btn-login:hover { background: var(--primary-dark); }
+        .login-card {
+            background: white; padding: 40px; border-radius: 12px;
+            text-align: center; width: 350px; border-top: 5px solid var(--brand);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .pass-field {
+            width: 100%; padding: 12px; margin: 20px 0; border: 1px solid #ccc;
+            border-radius: 6px; text-align: center; font-size: 16px; letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .btn-auth {
+            background: var(--brand); color: white; border: none; padding: 12px;
+            width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer;
+            text-transform: uppercase; transition: 0.2s;
+        }
+        .btn-auth:hover { background: var(--brand-dark); }
 
-        /* --- PÁGINA A4 --- */
-        .page {
+        /* --- DOCUMENTO (PÁGINA) --- */
+        .document-container {
             width: 210mm;
             min-height: 297mm;
-            background: var(--surface);
-            padding: 15mm;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            display: none; /* Oculto até logar */
+            background: var(--paper);
+            padding: 20mm; /* Margens de documento oficial */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none; /* Escondido até logar */
             flex-direction: column;
-            position: relative;
-            overflow: hidden; /* Para a marca d'água */
-        }
-
-        /* MARCA D'ÁGUA DE FUNDO */
-        .watermark {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 80px;
-            font-weight: 800;
-            color: rgba(0,0,0,0.02);
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 0;
-            text-transform: uppercase;
         }
 
         /* CABEÇALHO */
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 3px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px;
-            z-index: 1;
+            border-bottom: 2px solid var(--dark);
+            padding-bottom: 20px; margin-bottom: 40px;
+            display: flex; justify-content: space-between; align-items: flex-start;
         }
-        .brand h1 { font-size: 28px; color: var(--secondary); margin: 0; text-transform: uppercase; letter-spacing: -0.5px; }
-        .brand span { color: var(--primary); }
-        .brand p { font-size: 11px; color: var(--text-light); margin: 2px 0 0 0; letter-spacing: 1.5px; text-transform: uppercase; }
+        .brand-area h1 { margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: -1px; color: var(--dark); }
+        .brand-area span { color: var(--brand); }
+        .brand-area p { margin: 5px 0 0 0; font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
         
-        .meta-data { text-align: right; font-size: 12px; color: var(--text-light); }
-        .meta-input { border: none; border-bottom: 1px dashed #94a3b8; font-family: inherit; font-weight: 600; color: var(--secondary); text-align: right; width: 140px; background: transparent; }
-
-        /* CIÊNCIA E CONTEXTO */
-        .context-box {
-            background: #FFF7ED; border-left: 4px solid var(--primary);
-            padding: 15px 20px; border-radius: 0 8px 8px 0; margin-bottom: 30px;
-            display: flex; gap: 15px; align-items: flex-start; z-index: 1;
+        .meta-area { text-align: right; font-size: 13px; color: var(--dark); }
+        .meta-input { 
+            border: none; border-bottom: 1px dashed #94a3b8; width: 180px; 
+            text-align: right; font-family: inherit; font-weight: 600; color: var(--brand);
+            background: transparent;
         }
-        .context-icon { font-size: 20px; color: var(--primary); margin-top: 2px; }
-        .context-content h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: var(--secondary); font-weight: 800; }
-        .context-content p { margin: 4px 0 0 0; font-size: 12px; color: var(--text-main); font-family: 'Lora', serif; }
 
-        /* ESTRUTURA DE SEÇÕES */
-        .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 25px; z-index: 1; }
-        .full-row { margin-bottom: 25px; z-index: 1; }
-
+        /* CONTEÚDO */
+        .section-block { margin-bottom: 40px; break-inside: avoid; }
+        
         .section-header {
             display: flex; align-items: center; gap: 10px;
-            margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+            margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
         }
-        .section-header i { color: var(--primary); font-size: 14px; }
-        .section-header h3 { margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--secondary); font-weight: 700; }
+        .section-header i { color: var(--brand); font-size: 16px; }
+        .section-header h3 { margin: 0; font-size: 16px; text-transform: uppercase; color: var(--dark); }
 
-        /* CHECKLISTS ROBUSTOS */
-        .checklist-item {
-            display: flex; align-items: flex-start; gap: 12px;
-            padding: 10px; border: 1px solid transparent; border-radius: 6px;
-            transition: 0.2s; cursor: pointer; margin-bottom: 4px;
-        }
-        .checklist-item:hover { background: #F8FAFC; border-color: var(--border); }
-        .checklist-item.checked { background: #F0FDF4; border-color: #BBF7D0; }
-        .checklist-item.checked h4 { color: #94a3b8; text-decoration: line-through; }
-        .checklist-item.checked .checkbox { background: var(--success); border-color: var(--success); color: white; }
+        .helper-text { font-size: 12px; color: var(--gray); margin-bottom: 10px; font-style: italic; }
 
-        .checkbox {
-            width: 20px; height: 20px; border: 2px solid #CBD5E1; border-radius: 4px;
-            display: flex; align-items: center; justify-content: center; font-size: 12px; color: transparent; flex-shrink: 0; margin-top: 2px;
+        /* ÁREAS DE TEXTO EXPANSÍVEIS */
+        .textarea-box {
+            width: 100%; min-height: 100px; /* Começa pequeno mas cresce */
+            border: 1px solid #cbd5e1; border-radius: 4px;
+            background: #f8fafc; padding: 15px;
+            font-family: 'Lora', serif; font-size: 14px; color: var(--dark);
+            line-height: 1.6; text-align: justify;
         }
-        .item-text h4 { margin: 0; font-size: 13px; color: var(--text-main); font-weight: 600; }
-        .item-text p { margin: 2px 0 0 0; font-size: 11px; color: var(--text-light); }
+        .textarea-box:focus { background: white; outline: 2px solid var(--brand); border-color: transparent; }
+        .textarea-box:empty::before { content: attr(placeholder); color: #94a3b8; }
 
-        /* ÁREAS DE ESCRITA (INPUTS) */
-        .input-area {
-            width: 100%; min-height: 70px; border: 1px dashed #CBD5E1;
-            background: #FAFAFA; border-radius: 6px; padding: 10px;
-            font-family: 'Lora', serif; font-size: 13px; color: var(--secondary);
-            resize: none; /* Se fosse textarea, mas é div contenteditable */
+        /* GRIDS DE CHECKLIST */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .check-group { margin-bottom: 10px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; }
+        .check-box { 
+            width: 18px; height: 18px; border: 2px solid #cbd5e1; border-radius: 3px; 
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; margin-top: 2px;
         }
-        .input-area:focus { background: white; outline: 2px solid var(--primary); border-style: solid; }
-        .input-area:empty::before { content: attr(placeholder); color: #94a3b8; font-style: italic; }
+        .check-label { font-size: 13px; color: var(--dark); font-weight: 500; }
+        
+        /* Estado Checado */
+        .check-group.checked .check-box { background: var(--success); border-color: var(--success); }
+        .check-group.checked .check-label { text-decoration: line-through; color: #94a3b8; }
 
-        /* RODAPÉ E FEEDBACK */
-        footer {
-            margin-top: auto; padding-top: 20px; border-top: 2px solid var(--secondary);
-            display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-light); z-index: 1;
+        /* BOX DE DESTAQUE */
+        .highlight-box {
+            background: #fff7ed; border-left: 4px solid var(--brand); padding: 20px;
+            margin: 20px 0; border-radius: 0 4px 4px 0;
         }
-        .footer-brand strong { color: var(--secondary); }
-        .feedback-link { color: var(--primary); text-decoration: none; font-weight: 700; transition: 0.2s; }
-        .feedback-link:hover { color: var(--primary-dark); text-decoration: underline; }
+        .highlight-box h4 { margin: 0 0 5px 0; color: var(--brand-dark); font-size: 14px; text-transform: uppercase; }
+        .highlight-box p { margin: 0; font-size: 13px; color: var(--dark); }
+
+        /* RODAPÉ */
+        .doc-footer {
+            margin-top: auto; padding-top: 30px; border-top: 1px solid var(--dark);
+            text-align: center; font-size: 11px; color: var(--gray);
+        }
+        .doc-footer strong { color: var(--brand); }
+        .contact-line { margin-top: 5px; }
+        .contact-line a { color: var(--dark); text-decoration: none; font-weight: 600; }
 
         /* BOTÃO FLUTUANTE */
-        .fab-print {
+        .fab {
             position: fixed; bottom: 30px; right: 30px;
-            background: var(--secondary); color: white; width: 60px; height: 60px;
+            background: var(--dark); color: white; width: 60px; height: 60px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 24px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             transition: 0.3s; z-index: 100;
         }
-        .fab-print:hover { transform: translateY(-3px); background: var(--primary); }
+        .fab:hover { background: var(--brand); transform: scale(1.1); }
 
         /* MODO IMPRESSÃO */
         @media print {
-            body { background: white; padding: 0; }
-            .page { box-shadow: none; width: 100%; border: none; }
-            .fab-print, #login-screen { display: none !important; }
-            .input-area { border: 1px solid #e2e8f0; }
-            /* Ajuste de margem */
-            @page { margin: 0; }
-            body { -webkit-print-color-adjust: exact; }
+            body { background: white; padding: 0; display: block; }
+            #auth-overlay, .fab { display: none !important; }
+            .document-container { 
+                box-shadow: none; width: 100%; padding: 0; margin: 0; 
+                display: block !important; 
+            }
+            .textarea-box { border: 1px solid #ddd; background: transparent; }
+            /* Quebra de página inteligente */
+            .section-block { page-break-inside: avoid; }
+            @page { margin: 1.5cm; size: A4; }
         }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h1>Crescenza</h1>
-            <p style="font-size:13px; color:#94a3b8; margin-bottom:20px;">FERRAMENTA DE GESTÃO EXCLUSIVA</p>
-            <input type="password" id="password" class="pass-input" placeholder="SENHA" onkeyup="checkEnter(event)">
-            <button class="btn-login" onclick="login()">Desbloquear Acesso</button>
-            <p id="error-msg" style="color:#ef4444; font-size:12px; margin-top:15px; display:none; font-weight:700;">Senha Incorreta</p>
+    <div id="auth-overlay">
+        <div class="login-card">
+            <h1 style="color:var(--brand); margin:0;">CRESCENZA</h1>
+            <p style="font-size:12px; color:#64748B; margin-top:5px;">ÁREA DE FERRAMENTAS EXCLUSIVAS</p>
+            <input type="password" id="pass" class="pass-field" placeholder="SENHA" onkeyup="if(event.key==='Enter') login()">
+            <button class="btn-auth" onclick="login()">ACESSAR DOSSIÊ</button>
+            <p id="error" style="color:#ef4444; font-size:12px; display:none; margin-top:15px;">Senha Incorreta</p>
         </div>
     </div>
 
-    <div class="fab-print" onclick="window.print()" title="Salvar PDF ou Imprimir"><i class="fas fa-print"></i></div>
+    <div class="fab" onclick="window.print()" title="Salvar PDF / Imprimir"><i class="fas fa-file-pdf"></i></div>
 
-    <div class="page" id="app">
+    <div class="document-container" id="app">
         
-        <div class="watermark">@crescenzaonline</div>
-
         <header>
-            <div class="brand">
-                <h1>Crescenza<span>Flow</span></h1>
-                <p>Sistema de Encerramento Semanal | Método 360°</p>
+            <div class="brand-area">
+                <h1>Crescenza<span>Consultoria</span></h1>
+                <p>Gestão Estratégica & Liderança Humanizada</p>
             </div>
-            <div class="meta-data">
-                LÍDER: <input type="text" class="meta-input" placeholder="Seu Nome"><br>
-                DATA: <input type="text" class="meta-input" id="currentDate">
+            <div class="meta-area">
+                <div style="margin-bottom:5px;">
+                    RESPONSÁVEL: <input type="text" class="meta-input" placeholder="Seu Nome">
+                </div>
+                <div>
+                    DATA DO FECHAMENTO: <input type="text" class="meta-input" id="currentDate">
+                </div>
             </div>
         </header>
 
-        <div class="context-box">
-            <div class="context-icon"><i class="fas fa-brain"></i></div>
-            <div class="context-content">
-                <h4>Gestão de Energia Cognitiva</h4>
-                <p>Estudos indicam que a produtividade de segunda-feira é definida na sexta anterior. O cérebro precisa de "fechamento cognitivo" (Cognitive Closure) para descansar. Use este ritual para tirar as pendências da mente e colocá-las no papel.</p>
-            </div>
+        <div class="highlight-box">
+            <h4><i class="fas fa-brain"></i> A Lógica da Gestão de Energia</h4>
+            <p>O cérebro humano não foi desenhado para manter "abas abertas" indefinidamente. Este dossiê aplica o conceito de <em>Cognitive Closure</em> (Fechamento Cognitivo). Ao externalizar pendências e planejar o futuro no papel, você reduz a ansiedade em 60% e preserva sua energia para a retomada na segunda-feira.</p>
         </div>
 
-        <div class="grid-row">
-            <div>
-                <div class="section-header">
-                    <i class="fas fa-history"></i>
-                    <h3>1. Retrospectiva (Análise)</h3>
-                </div>
-                
-                <div class="checklist-item" onclick="toggle(this)">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Checagem de Metas</h4>
-                        <p>Analisei os números da semana? O que avançou?</p>
-                    </div>
-                </div>
-                
-                <div class="input-area" contenteditable="true" placeholder="O que funcionou bem esta semana? (Vitórias)"></div>
-                <div class="input-area" contenteditable="true" placeholder="O que travou/bloqueou o progresso? (Gargalos)" style="margin-top:10px;"></div>
+        <div class="section-block">
+            <div class="section-header">
+                <i class="fas fa-chart-line"></i>
+                <h3>1. Retrospectiva Estratégica (O que aconteceu?)</h3>
             </div>
-
-            <div>
-                <div class="section-header">
-                    <i class="fas fa-broom"></i>
-                    <h3>2. Higiene Operacional (Ordem)</h3>
-                </div>
-
-                <div class="checklist-item" onclick="toggle(this)">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Zero Pendências Críticas</h4>
-                        <p>Respondi o urgente? Agendei o restante para Seg?</p>
-                    </div>
-                </div>
-
-                <div class="checklist-item" onclick="toggle(this)">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Mesa & Abas Limpas</h4>
-                        <p>Organizei arquivos físicos e fechei o navegador?</p>
-                    </div>
-                </div>
-
-                <div class="checklist-item" onclick="toggle(this)">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Delegação Ativa</h4>
-                        <p>Destravei minha equipe? Enviei o que devia?</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid-row">
-            <div>
-                <div class="section-header">
-                    <i class="fas fa-users"></i>
-                    <h3>3. Pessoas (Termômetro)</h3>
-                </div>
-                <div class="checklist-item" onclick="toggle(this)">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Reconhecimento (Dopamina)</h4>
-                        <p>Enviei um elogio ou agradecimento específico?</p>
-                    </div>
-                </div>
-                <div class="input-area" contenteditable="true" placeholder="Quem se destacou? Quem precisa de apoio na próxima semana?"></div>
-            </div>
-
-            <div>
-                <div class="section-header">
-                    <i class="fas fa-chess"></i>
-                    <h3>4. Estratégia (Segunda-feira)</h3>
-                </div>
-                <div class="checklist-item" onclick="toggle(this)">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Regra das 3 Prioridades</h4>
-                        <p>Se eu só puder fazer 3 coisas na segunda, quais serão?</p>
-                    </div>
-                </div>
-                <div class="input-area" contenteditable="true" placeholder="1. Prioridade A&#10;2. Prioridade B&#10;3. Prioridade C"></div>
-            </div>
-        </div>
-
-        <div class="full-row" style="margin-top:auto">
-            <div class="section-header" style="border-color: var(--success);">
-                <i class="fas fa-power-off" style="color:var(--success)"></i>
-                <h3 style="color:var(--success)">5. Ritual de Desconexão (Saúde Mental)</h3>
-            </div>
-            <p style="font-size:12px; color:#64748B; margin-bottom:10px;">Para ser uma líder inteira (Raiz e Voo), é preciso saber parar. Comprometa-se agora:</p>
             
-            <div style="display:flex; gap:20px;">
-                <div class="checklist-item" onclick="toggle(this)" style="flex:1;">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Notificações Off</h4>
-                        <p>Silenciei o celular corporativo?</p>
+            <div class="grid-2">
+                <div>
+                    <p class="helper-text">VITÓRIAS: O que funcionou? Quais metas avançaram?</p>
+                    <div class="textarea-box" contenteditable="true" placeholder="Liste aqui suas conquistas da semana..."></div>
+                </div>
+                <div>
+                    <p class="helper-text">GARGALOS: O que travou? Onde perdemos tempo?</p>
+                    <div class="textarea-box" contenteditable="true" placeholder="Liste aqui os bloqueios e desafios..."></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header">
+                <i class="fas fa-tasks"></i>
+                <h3>2. Higiene Operacional (Checklist de Esvaziamento)</h3>
+            </div>
+            <p class="helper-text">Marque apenas quando a tarefa estiver 100% resolvida ou agendada.</p>
+
+            <div class="grid-2">
+                <div>
+                    <div class="check-group" onclick="toggle(this)">
+                        <div class="check-box"><i class="fas fa-check"></i></div>
+                        <div class="check-label">E-mail Zero (Urgentes respondidos)</div>
+                    </div>
+                    <div class="check-group" onclick="toggle(this)">
+                        <div class="check-box"><i class="fas fa-check"></i></div>
+                        <div class="check-label">Agenda da próxima semana revisada</div>
+                    </div>
+                    <div class="check-group" onclick="toggle(this)">
+                        <div class="check-box"><i class="fas fa-check"></i></div>
+                        <div class="check-label">Reuniões desnecessárias canceladas</div>
                     </div>
                 </div>
-                <div class="checklist-item" onclick="toggle(this)" style="flex:1;">
-                    <div class="checkbox"><i class="fas fa-check"></i></div>
-                    <div class="item-text">
-                        <h4>Agenda Pessoal</h4>
-                        <p>Defini meu momento de lazer/família?</p>
+                <div>
+                    <div class="check-group" onclick="toggle(this)">
+                        <div class="check-box"><i class="fas fa-check"></i></div>
+                        <div class="check-label">Ambiente físico organizado (Mesa)</div>
+                    </div>
+                    <div class="check-group" onclick="toggle(this)">
+                        <div class="check-box"><i class="fas fa-check"></i></div>
+                        <div class="check-label">Abas do navegador fechadas</div>
+                    </div>
+                    <div class="check-group" onclick="toggle(this)">
+                        <div class="check-box"><i class="fas fa-check"></i></div>
+                        <div class="check-label">Pendências financeiras aprovadas</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <footer>
-            <div class="footer-brand">
-                Desenvolvido por <strong>Idionara Prass</strong> | @crescenzaonline
+        <div class="section-block">
+            <div class="section-header">
+                <i class="fas fa-users"></i>
+                <h3>3. Termômetro da Equipe & Cultura</h3>
             </div>
-            <div>
-                Tem sugestões? <a href="mailto:contato@crescenzaonline.com" class="feedback-link">contato@crescenzaonline.com</a>
+            
+            <p class="helper-text">FEEDBACK RÁPIDO: Quem se destacou? Quem precisa de atenção?</p>
+            <div class="textarea-box" contenteditable="true" placeholder="Ex: Elogiar a Maria pelo relatório X; Conversar com o João sobre o prazo Y..."></div>
+            
+            <div style="margin-top:15px;">
+                <p class="helper-text">AÇÃO DE CULTURA: Qual gesto eu fiz essa semana que reforçou nossos valores?</p>
+                <div class="textarea-box" contenteditable="true" style="min-height:60px;" placeholder="Descreva sua ação de liderança..."></div>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header">
+                <i class="fas fa-bullseye"></i>
+                <h3>4. O "Big Three" de Segunda-feira</h3>
+            </div>
+            <p class="helper-text">Defina as 3 prioridades absolutas para começar a semana no ataque.</p>
+            
+            <div class="textarea-box" contenteditable="true" style="font-weight:bold; color:var(--brand-dark);" 
+                 placeholder="1. Prioridade A&#10;2. Prioridade B&#10;3. Prioridade C"></div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header">
+                <i class="fas fa-lightbulb"></i>
+                <h3>5. Diário de Bordo (Insights & Aprendizados)</h3>
+            </div>
+            <div class="textarea-box" contenteditable="true" style="min-height:150px; background:#fff;" 
+                 placeholder="Espaço livre para reflexões, ideias que surgiram, lições aprendidas ou anotações pessoais..."></div>
+        </div>
+
+        <footer class="doc-footer">
+            <div style="margin-bottom:10px;">
+                Produto desenvolvido pela <strong>Crescenza Consultoria</strong> | Método Entre a Raiz e o Voo<br>
+                <em>Proibida a reprodução ou comercialização sem autorização prévia.</em>
+            </div>
+            <div class="contact-line">
+                Dúvidas ou Feedback da ferramenta? <a href="mailto:contato@crescenzaonline.com">contato@crescenzaonline.com</a>
+                <br>
+                Siga: <strong>@crescenzaonline</strong> | <strong>@idionaraprass</strong>
             </div>
         </footer>
 
@@ -327,51 +310,44 @@
         // SENHA CONFIGURADA
         const PASS_CODE = "CRESCENZA";
 
-        // Inicialização
+        // Inicializar Data
         window.onload = () => {
             const today = new Date();
             document.getElementById('currentDate').value = today.toLocaleDateString('pt-BR');
         };
 
-        // Lógica de Login
+        // Função de Login
         function login() {
-            const input = document.getElementById('password').value.toUpperCase().trim();
+            const input = document.getElementById('pass').value.toUpperCase().trim();
+            const overlay = document.getElementById('auth-overlay');
+            const doc = document.querySelector('.document-container');
+            const error = document.getElementById('error');
+
             if (input === PASS_CODE) {
-                document.getElementById('login-screen').style.opacity = '0';
+                overlay.style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app').style.display = 'flex';
-                }, 400);
+                    overlay.style.display = 'none';
+                    doc.style.display = 'flex';
+                }, 300);
             } else {
-                const err = document.getElementById('error-msg');
-                err.style.display = 'block';
-                document.getElementById('password').value = '';
-                document.querySelector('.login-box').style.animation = "shake 0.3s";
-                setTimeout(() => document.querySelector('.login-box').style.animation = "", 300);
+                error.style.display = 'block';
+                // Efeito de tremor
+                const box = document.querySelector('.login-card');
+                box.style.transform = 'translateX(10px)';
+                setTimeout(() => box.style.transform = 'translateX(-10px)', 100);
+                setTimeout(() => box.style.transform = 'translateX(0)', 200);
             }
         }
 
         function checkEnter(e) {
-            if(e.key === "Enter") login();
+            if(e.key === 'Enter') login();
         }
 
-        // Lógica de Checklist
+        // Lógica dos Checkboxes
         function toggle(el) {
             el.classList.toggle('checked');
         }
-
-        // CSS Animation for Error
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes shake {
-                0% { transform: translateX(0); }
-                25% { transform: translateX(-5px); }
-                50% { transform: translateX(5px); }
-                75% { transform: translateX(-5px); }
-                100% { transform: translateX(0); }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
+
 </body>
 </html>
