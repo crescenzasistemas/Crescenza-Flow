@@ -137,6 +137,18 @@
             text-align: center; font-size: 11px; color: var(--gray);
         }
         .doc-footer strong { color: var(--brand); }
+        
+        /* Estilos dos links do rodapé */
+        .doc-footer a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 600;
+        }
+        .doc-footer a:hover {
+            color: var(--brand);
+            text-decoration: underline;
+        }
 
         /* --- ÁREA DE AÇÃO FINAL (TELA) --- */
         .final-actions-container {
@@ -195,6 +207,8 @@
             }
             .textarea-box { border: 1px solid #ddd; background: transparent; }
             .section-block { page-break-inside: avoid; }
+            /* Garante que os links impressos fiquem pretos ou cinza, sem azul padrão */
+            .doc-footer a { color: var(--gray); text-decoration: none; }
             @page { margin: 1.5cm; size: A4; }
         }
     </style>
@@ -300,7 +314,8 @@
                 <em>Proibida a reprodução ou comercialização sem autorização prévia.</em>
             </div>
             <div>
-                www.crescenzaonline.com | @idionaraprass
+                <a href="https://www.crescenzaonline.com/" target="_blank">www.crescenzaonline.com</a> | 
+                <a href="https://www.instagram.com/idionaraprass/" target="_blank">@idionaraprass</a>
             </div>
         </footer>
 
